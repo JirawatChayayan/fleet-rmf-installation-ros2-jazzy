@@ -35,6 +35,7 @@
    sudo apt upgrade
    sudo apt install ros-jazzy-desktop
    sudo apt install ros-jazzy-rmf-building-map-msgs
+   sudo apt install ros-jazzy-rmw-cyclonedds-cpp
    ```
 
 3.Download this reposity and unzip in home directory ~/

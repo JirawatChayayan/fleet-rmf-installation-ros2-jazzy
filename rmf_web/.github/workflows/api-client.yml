@@ -1,0 +1,40 @@
+name: api-client
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/api-client.yml'
+      - '.github/minimal-rmf/**'
+      - 'packages/api-client/**'
+  push:
+    branches:
+      - main
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ros_distribution: [jazzy, rolling]
+    container:
+      image: ghcr.io/${{ github.repository }}/minimal-rmf:${{ matrix.ros_distribution }}-nightly
+      credentials:
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: packages/api-client
+    steps:
+      - uses: actions/checkout@v4
+      - name: bootstrap
+        uses: ./.github/actions/bootstrap
+        with:
+          package: api-client
+      - name: lint
+        run: pnpm run lint
+      - name: test
+        run: pnpm test
